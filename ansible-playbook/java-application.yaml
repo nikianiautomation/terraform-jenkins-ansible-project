@@ -1,0 +1,30 @@
+---
+- name: Download and run Spring Boot jar
+  hosts: your_server_group
+  become: yes
+
+  vars:
+    jar_url: "http://18.234.147.103:8080/job/webapp/ws/demo/target/demo-0.0.1-SNAPSHOT.jar"
+    jar_dest: "/opt/demo/demo-0.0.1-SNAPSHOT.jar"
+    java_opts: "-Xms256m -Xmx512m"
+    run_dir: "/opt/demo"
+
+  tasks:
+    - name: Create app directory
+      file:
+        path: "{{ run_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download jar file
+      ansible.builtin.get_url:
+        url: "{{ jar_url }}"
+        dest: "{{ jar_dest }}"
+        mode: '0755'
+
+    - name: Run jar file in background
+      ansible.builtin.shell: "nohup java -jar {{ jar_dest }} > /dev/null 2>&1 &"
+      args:
+        chdir: "{{ run_dir }}"
+      async: 10
+      poll: 0
