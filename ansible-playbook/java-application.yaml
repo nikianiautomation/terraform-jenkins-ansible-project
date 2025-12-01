@@ -1,6 +1,6 @@
 ---
 - name: Download and run Spring Boot jar
-  hosts: your_server_group
+  hosts: all
   become: yes
 
   vars:
