@@ -3,8 +3,8 @@
   hosts: all
   become: yes
   vars:
-    java_package_debian: openjdk-17-jdk
-    java_package_redhat: java-17-openjdk
+    java_package_debian: java-21-amazon-corretto
+    java_package_redhat: java-21-amazon-corretto
 
   tasks:
     - name: Gather OS family facts
