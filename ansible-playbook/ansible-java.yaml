@@ -1,0 +1,26 @@
+---
+- name: Install Java (OpenJDK)
+  hosts: all
+  become: yes
+  vars:
+    java_package_debian: openjdk-17-jdk
+    java_package_redhat: java-17-openjdk
+
+  tasks:
+    - name: Gather OS family facts
+      ansible.builtin.setup:
+        gather_subset:
+          - os_family
+
+    - name: Install Java on Debian/Ubuntu
+      ansible.builtin.apt:
+        name: "{{ java_package_debian }}"
+        state: present
+        update_cache: yes
+      when: ansible_facts.os_family == "Debian"
+
+    - name: Install Java on RHEL/CentOS/Amazon Linux
+      ansible.builtin.yum:
+        name: "{{ java_package_redhat }}"
+        state: present
+      when: ansible_facts.os_family == "RedHat"
