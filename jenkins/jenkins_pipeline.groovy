@@ -40,6 +40,9 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                     sh '''
+                    pwd
+                    '''
                     dockerImage = docker.build("${DOCKER_HUB_REPO}:${IMAGE_TAG}" , "-f demo/demo.dockerfile")
                 }
             }
