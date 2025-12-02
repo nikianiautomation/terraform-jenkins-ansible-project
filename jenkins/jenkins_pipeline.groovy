@@ -20,8 +20,6 @@ pipeline {
                 sh '''
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
-                    cd demo
-                    pwd
                 '''
             }
         }
@@ -29,7 +27,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'mvn -Dmaven.test.failure.ignore=true install'
+                        sh 'mvn -f demo/pom.xml clean -Dmaven.test.failure.ignore=true install package'
                  } catch (Exception e) {
                         echo "Maven Build failed: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
