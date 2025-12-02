@@ -17,8 +17,8 @@ pipeline {
         }
         stage('Maven Build & Test') {
             steps {
-                 withMaven {
-                    sh "mvn clean verify"
+                 withMaven(traceability: true) {
+                    sh 'mvn clean verify'
                 }
             }
         }
