@@ -17,19 +17,8 @@ pipeline {
         }
         stage('Maven Build & Test') {
             steps {
-                withMaven(
-                    maven: 'maven-3.9.9',
-                    mavenLocalRepo: '.repo',  // Local repo caching
-                    mavenOpts: '-Xmx2048m -Dmaven.repo.local=.repo',
-                    options: [
-                        // Maven Integration Plugin options
-                        mavenLogLevel: 'INFO',
-                        publisherStrategy: 'runOnly',
-                        recordTestFailures: true,
-                        recordTestResults: true
-                    ]
-                ) {
-                    sh 'cd demo ; mvn clean verify -DskipITs'  // Full verify lifecycle
+                 withMaven {
+                    sh "mvn clean verify"
                 }
             }
         }
