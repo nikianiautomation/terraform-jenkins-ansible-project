@@ -17,9 +17,15 @@ pipeline {
         }
         stage('Maven Build & Test') {
             steps {
+                try {
                  withMaven(traceability: true) {
                     sh 'mvn clean verify'
-                }
+                    }
+                 } catch (Exception e) {
+                        echo "Maven Build failed: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE'
+                        error("Stopping pipeline due to build failure")
+                    }
             }
         }
         stage('Build Docker Image') {
