@@ -1,8 +1,7 @@
 pipeline {
     agent any
     tools {
-        maven 'Maven-3.9.9'  // Configured in Global Tool Configuration
-        jdk 'JDK-21'         // Configured JDK 21
+        maven 'maven-3.9.9'  // Configured in Global Tool Configuration
     }
     environment {
         // Docker Hub credentials stored in Jenkins Credentials with ID 'dockerhub-creds'
@@ -19,8 +18,7 @@ pipeline {
         stage('Maven Build & Test') {
             steps {
                 withMaven(
-                    maven: 'Maven-3.9.9',
-                    jdk: 'JDK-21',
+                    maven: 'maven-3.9.9',
                     mavenLocalRepo: '.repo',  // Local repo caching
                     mavenOpts: '-Xmx2048m -Dmaven.repo.local=.repo',
                     options: [
