@@ -14,7 +14,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'cd demo ; mvn clean package -DskipTests'
+                // Uses Maven plugin with goals directly
+                configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
+                    sh '''
+                        mvn clean package -DskipTests -s $MAVEN_SETTINGS
+                    '''
+                }
             }
         }
         stage('Build Docker Image') {
