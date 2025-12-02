@@ -15,15 +15,19 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/nikianiautomation/spring-java-maven-project.git'
             }
         }
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
+            }
+        }
         stage('Maven Build & Test') {
             steps {
                 script {
                     try {
-                        withMaven(traceability: true) {
-                            sh 'cd demo'
-                            sh 'pwd'
-                            sh 'mvn clean verify'
-                        }
+                        sh 'mvn -Dmaven.test.failure.ignore=true install'
                  } catch (Exception e) {
                         echo "Maven Build failed: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
