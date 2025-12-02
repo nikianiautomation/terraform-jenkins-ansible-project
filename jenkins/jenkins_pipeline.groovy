@@ -5,9 +5,9 @@ pipeline {
     }
     environment {
         // Docker Hub credentials stored in Jenkins Credentials with ID 'dockerhub-creds'
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-creds') 
-        DOCKER_HUB_REPO = 'nikithalokesh/nikithademo' 
-        IMAGE_TAG = "latest"
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-creds')
+        DOCKER_HUB_REPO = 'nikithalokesh/nikithademo'
+        IMAGE_TAG = 'latest'
     }
     stages {
         stage('Checkout') {
@@ -17,15 +17,17 @@ pipeline {
         }
         stage('Maven Build & Test') {
             steps {
-                try {
-                 withMaven(traceability: true) {
-                    sh 'mvn clean verify'
-                    }
+                script {
+                    try {
+                        withMaven(traceability: true) {
+                            sh 'mvn clean verify'
+                        }
                  } catch (Exception e) {
                         echo "Maven Build failed: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
-                        error("Stopping pipeline due to build failure")
+                        error('Stopping pipeline due to build failure')
                     }
+                }
             }
         }
         stage('Build Docker Image') {
