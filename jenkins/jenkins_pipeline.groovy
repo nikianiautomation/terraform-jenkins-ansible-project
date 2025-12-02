@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'mvn -f pom.xml clean -Dmaven.test.failure.ignore=true install package'
+                        sh 'mvn -f demo/pom.xml clean -Dmaven.test.failure.ignore=true install package'
                  } catch (Exception e) {
                         echo "Maven Build failed: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
@@ -47,7 +47,7 @@ pipeline {
                      sh '''
                     pwd
                     '''
-                    dockerImage = docker.build("${DOCKER_HUB_REPO}:${IMAGE_TAG}" , "-f demo/demo.dockerfile .")
+                    dockerImage = docker.build("${DOCKER_HUB_REPO}:${BUILD_NUMBER}" , "-f demo/demo.dockerfile .")
                 }
             }
         }
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("${DOCKER_HUB_URL}", 'dockerhub-creds') {
-                        dockerImage.push("${IMAGE_TAG}")
+                        dockerImage.push("${BUILD_NUMBER}")
                     }
                 }
             }
