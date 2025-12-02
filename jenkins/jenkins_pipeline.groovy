@@ -6,13 +6,17 @@ pipeline {
     environment {
         // Docker Hub credentials stored in Jenkins Credentials with ID 'dockerhub-creds'
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-creds')
+        DOCKER_HUB_URL = "https://registry.hub.docker.com"
         DOCKER_HUB_REPO = 'nikithalokesh/nikithademo'
         IMAGE_TAG = 'latest'
+        GIT_BRANCH = 'main'
+        GIT_URL = 'https://github.com/nikianiautomation/spring-java-maven-project.git'
+
     }
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/nikianiautomation/spring-java-maven-project.git'
+                git branch: "${GIT_BRANCH}", url: "${GIT_URL}"
             }
         }
         stage ('Initialize') {
@@ -28,7 +32,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'mvn -f demo/pom.xml clean -Dmaven.test.failure.ignore=true install package'
+                        sh 'mvn -f pom.xml clean -Dmaven.test.failure.ignore=true install package'
                  } catch (Exception e) {
                         echo "Maven Build failed: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
@@ -50,7 +54,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-creds') {
+                    docker.withRegistry("${DOCKER_HUB_URL}", 'dockerhub-creds') {
                         dockerImage.push("${IMAGE_TAG}")
                     }
                 }
