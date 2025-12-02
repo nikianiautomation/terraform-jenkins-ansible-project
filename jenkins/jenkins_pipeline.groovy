@@ -20,6 +20,8 @@ pipeline {
                 script {
                     try {
                         withMaven(traceability: true) {
+                            sh 'cd demo'
+                            sh 'pwd'
                             sh 'mvn clean verify'
                         }
                  } catch (Exception e) {
