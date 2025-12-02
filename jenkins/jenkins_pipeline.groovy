@@ -29,7 +29,7 @@ pipeline {
                         recordTestResults: true
                     ]
                 ) {
-                    sh 'mvn clean verify -DskipITs'  // Full verify lifecycle
+                    sh 'cd demo ; mvn clean verify -DskipITs'  // Full verify lifecycle
                 }
             }
         }
